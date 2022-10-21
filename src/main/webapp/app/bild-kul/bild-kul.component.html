@@ -1,0 +1,19 @@
+<div style="width: 100%; display: flex; justify-content: center">
+
+  <input type="file" class="file-input" name="kulBild"
+         (change)="onFileSelected($event)" #fileUpload />
+
+  <div class="file-upload">
+
+    {{fileName || "No file uploaded yet."}}
+
+    <button mat-mini-fab color="primary" class="upload-btn"
+            (click)="fileUpload.click()">
+      <!--<mat-icon>attach_file</mat-icon>-->
+      <fa-icon icon="file"></fa-icon>
+    </button>
+  </div>
+
+</div>
+
+<div [innerHTML]="ascii" class="output"></div>

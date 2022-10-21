@@ -1,0 +1,160 @@
+<div>
+  <div class="d-flex justify-content-center">
+    <div class="col-md-8">
+      <h1 data-cy="registerTitle">Registrering</h1>
+
+      <div class="alert alert-success" *ngIf="success"><strong>Användarnamn sparat!</strong> Kontrollera din e-post för konfirmation.</div>
+
+      <div class="alert alert-danger" *ngIf="error"><strong>Registreringen misslyckades!</strong> Prova gärna igen senare.</div>
+
+      <div class="alert alert-danger" *ngIf="errorUserExists">
+        <strong>Användarnamnet finns redan!</strong> Prova gärna ett annat användarnamn.
+      </div>
+
+      <div class="alert alert-danger" *ngIf="errorEmailExists">
+        <strong>Mailadressen är redan använd!</strong> Prova gärna en annan mailadress.
+      </div>
+
+      <div class="alert alert-danger" *ngIf="doNotMatch">Lösenorden stämmer inte med varandra!</div>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-center">
+    <div class="col-md-8">
+      <form name="form" role="form" (ngSubmit)="register()" [formGroup]="registerForm" *ngIf="!success">
+        <div class="mb-3">
+          <label class="form-label" for="login">Användarnamn</label>
+          <input
+            type="text"
+            class="form-control"
+            id="login"
+            name="login"
+            placeholder="Ditt användarnamn"
+            formControlName="login"
+            data-cy="username"
+            #login
+          />
+
+          <div *ngIf="registerForm.get('login')!.invalid && (registerForm.get('login')!.dirty || registerForm.get('login')!.touched)">
+            <small class="form-text text-danger" *ngIf="registerForm.get('login')?.errors?.required">
+              Du måste fylla i ett användarnamn
+            </small>
+
+            <small class="form-text text-danger" *ngIf="registerForm.get('login')?.errors?.minlength">
+              Ditt användarnamn måste vara minst ett tecken
+            </small>
+
+            <small class="form-text text-danger" *ngIf="registerForm.get('login')?.errors?.maxlength">
+              Ditt användarnamn kan inte vara längre än 50 tecken
+            </small>
+
+            <small class="form-text text-danger" *ngIf="registerForm.get('login')?.errors?.pattern"> Your username is invalid. </small>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="email">E-post</label>
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            name="email"
+            placeholder="Din e-post"
+            formControlName="email"
+            data-cy="email"
+          />
+
+          <div *ngIf="registerForm.get('email')!.invalid && (registerForm.get('email')!.dirty || registerForm.get('email')!.touched)">
+            <small class="form-text text-danger" *ngIf="registerForm.get('email')?.errors?.required"> Din måste fylla i din e-post </small>
+
+            <small class="form-text text-danger" *ngIf="registerForm.get('email')?.errors?.invalid">
+              Din e-post adress är inte giltig.
+            </small>
+
+            <small class="form-text text-danger" *ngIf="registerForm.get('email')?.errors?.minlength">
+              Din e-post måste vara minst 5 tecken
+            </small>
+
+            <small class="form-text text-danger" *ngIf="registerForm.get('email')?.errors?.maxlength">
+              Din e-post får inte vara längre än 50 tecken
+            </small>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="password">Nytt lösenord</label>
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            name="password"
+            placeholder="Nytt lösenord"
+            formControlName="password"
+            data-cy="firstPassword"
+          />
+
+          <div
+            *ngIf="registerForm.get('password')!.invalid && (registerForm.get('password')!.dirty || registerForm.get('password')!.touched)"
+          >
+            <small class="form-text text-danger" *ngIf="registerForm.get('password')?.errors?.required">
+              Du måste fylla i ett lösenord
+            </small>
+
+            <small class="form-text text-danger" *ngIf="registerForm.get('password')?.errors?.minlength">
+              Ditt lösenord måste vara 4 tecken
+            </small>
+
+            <small class="form-text text-danger" *ngIf="registerForm.get('password')?.errors?.maxlength">
+              Ditt lösenord kan inte vara längre än 50 tecken
+            </small>
+          </div>
+
+          <jhi-password-strength-bar [passwordToCheck]="registerForm.get('password')!.value"></jhi-password-strength-bar>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="confirmPassword">Konfirmera nytt lösenord</label>
+          <input
+            type="password"
+            class="form-control"
+            id="confirmPassword"
+            name="confirmPassword"
+            placeholder="Konfirmera det nya lösenordet"
+            formControlName="confirmPassword"
+            data-cy="secondPassword"
+          />
+
+          <div
+            *ngIf="
+              registerForm.get('confirmPassword')!.invalid &&
+              (registerForm.get('confirmPassword')!.dirty || registerForm.get('confirmPassword')!.touched)
+            "
+          >
+            <small class="form-text text-danger" *ngIf="registerForm.get('confirmPassword')?.errors?.required">
+              Du måste bekräfta ditt lösenord
+            </small>
+
+            <small class="form-text text-danger" *ngIf="registerForm.get('confirmPassword')?.errors?.minlength">
+              Ditt konfirmationslösenord måste vara 4 tecken långt
+            </small>
+
+            <small class="form-text text-danger" *ngIf="registerForm.get('confirmPassword')?.errors?.maxlength">
+              Ditt konfirmationslösenord kan inte vara längre än 50 tecken
+            </small>
+          </div>
+        </div>
+
+        <button type="submit" [disabled]="registerForm.invalid" class="btn btn-primary" data-cy="submit">Registrera</button>
+      </form>
+
+      <div class="mt-3 alert alert-warning">
+        <span>Om du vill </span>
+        <a class="alert-link" routerLink="/login">logga in</a
+        ><span>
+          - prova med standard kontot:<br />- Administratör (användarnamn="admin" och lösenord="admin") <br />- Användare (login="user" och
+          lösenord="user").</span
+        >
+      </div>
+    </div>
+  </div>
+</div>
